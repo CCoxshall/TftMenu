@@ -17,6 +17,7 @@ struct MenuItem
         Text = text;
         DisplayFunction = displayFunction;
     }
+    bool IsSelected = false;
     char* Text;
     DisplayFn DisplayFunction;
 };

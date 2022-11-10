@@ -22,4 +22,38 @@ ItemBounds ST7735_Renderer::RenderItem(unsigned char index)
     {
         return ItemBounds::Empty;
     }
+
+    unsigned char itemWidth = _pageCount > 1 ? 150 : 160;
+
+    ItemBounds bounds = { itemWidth, 16, 0, 16 * (index - (_currentPage * 6)) };
+
+    MenuItem item = _menuItems->at(index);
+
+    _display->setTextSize(1); // 6x8
+
+    // draw the box
+    _display->fillRect(bounds.Left, bounds.Top, bounds.Width, bounds.Height, item.IsSelected ? ST7735_WHITE : ST7735_BLACK);
+    _display->drawRect(bounds.Left, bounds.Top, bounds.Width, bounds.Height, ST7735_WHITE);
+    
+
+    // measure the text - if longer than the allotted space, remove characters until it fits
+    String itemText = item.Text;
+
+    int16_t measuredX = 0, measuredY = 0;
+    uint16_t measuredWidth = 0, measuredHeight = 0;
+
+    int16_t x = 4, y = 4;
+
+    bool modified = false;
+    _display->getTextBounds(itemText, x, y, &measuredX, &measuredY, &measuredWidth, &measuredHeight);
+    while (measuredWidth > itemWidth - 8)
+    {
+        modified = true;
+        itemText = itemText.substring(0, itemText.length() - 1);
+        _display->getTextBounds(itemText, x, y, &measuredX, &measuredY, &measuredWidth, &measuredHeight);
+    }
+    
+    _display->setCursor(x, bounds.Top + y);
+    _display->setTextColor(item.IsSelected ? ST7735_BLACK : ST7735_WHITE);
+    _display->write(itemText.c_str());
 };

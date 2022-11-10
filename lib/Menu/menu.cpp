@@ -13,23 +13,31 @@ void Menu::UseRenderer(MenuRenderer renderer)
 size_t Menu::Add(char* text, DisplayFn displayFunction)
 {
     _items.push_back(MenuItem(text, displayFunction));
-    return _items.size();
+    size_t count = _items.size();
+    if(count == 1){
+        _items.at(0).IsSelected = true;
+    }
+    return count;
 }
 
 void Menu::Next()
 {
+    _items.at(_selected).IsSelected = false;
     _selected++;
     if(_selected >= _items.size()){
         _selected = 0;
     }
+    _items.at(_selected).IsSelected = true;
 }
 
 void Menu::Previous()
 {
+    _items.at(_selected).IsSelected = false;
     _selected--;
     if(_selected < 0){
         _selected = (_items.size() - 1);
     }
+    _items.at(_selected).IsSelected = true;
 }
 
 int Menu::Selected()
