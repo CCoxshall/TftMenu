@@ -5,13 +5,13 @@ Menu::Menu(){
     _selected = 0;
 }
 
-void Menu::UseRenderer(MenuRenderer renderer)
+void Menu::UseRenderer(MenuRenderer* renderer)
 {
     _renderer = renderer;
-    _renderer.Init(&_items, &_selected);
+    _renderer->Init(&_items, &_selected);
 }
 
-size_t Menu::Add(char* text, DisplayFn displayFunction)
+size_t Menu::Add(String text, DisplayFn displayFunction)
 {
     _items.push_back(MenuItem(text, displayFunction));
     size_t count = _items.size();
@@ -46,7 +46,7 @@ uint8_t Menu::Selected()
     return _selected;
 }
 
-char* Menu::SelectedText()
+String Menu::SelectedText()
 {
     return _items.at(_selected).Text;
 }
@@ -64,5 +64,7 @@ void Menu::Exit()
 
 void Menu::Render()
 {
-    _renderer.Render();
+    _renderer->Render();
 }
+
+MenuRenderer::MenuRenderer(){};

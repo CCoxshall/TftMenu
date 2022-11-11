@@ -9,6 +9,7 @@
 
 Adafruit_ST7735 Display = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 Menu AppMenu;
+ST7735_Renderer DisplayRenderer = {&Display};
 
 /// @brief Method to draw data to the screen for the first menu item
 void displayFirstScreen()
@@ -47,7 +48,7 @@ void setup() {
   Display.initR(INITR_BLACKTAB);
   Display.fillScreen(ST7735_BLACK);
 
-  AppMenu.UseRenderer(ST7735_Renderer(&Display)); // we use the & here to pass a reference to the display
+  AppMenu.UseRenderer(&DisplayRenderer); // we use the & here to pass a reference to the display
   AppMenu.Add("Item 1", &displayFirstScreen); // we use the '&' here to pass a "function pointer"
   AppMenu.Add("Item 2", &displaySecondScreen); // this means we're passing a reference to the display function,
   AppMenu.Add("Item 3", &displayThirdScreen); // which we can then call from the Menu code.

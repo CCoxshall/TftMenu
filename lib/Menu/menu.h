@@ -12,19 +12,19 @@ using namespace std;
 typedef void (*DisplayFn)();
 struct MenuItem
 {
-    MenuItem(char* text, DisplayFn displayFunction)
+    MenuItem(String text, DisplayFn displayFunction)
     {
         Text = text;
         DisplayFunction = displayFunction;
     }
     bool IsSelected = false;
-    char* Text;
+    String Text;
     DisplayFn DisplayFunction;
 };
 
 struct ItemBounds
 {
-    ItemBounds(short w, short h, short l, short t)
+    ItemBounds(uint8_t w, uint8_t h, uint8_t l, uint8_t t)
     {
         Width = w;
         Height = h;
@@ -34,26 +34,23 @@ struct ItemBounds
         Bottom = t + h;
     }
 
-    short Width;
-    short Height;
-    short Top;
-    short Bottom;
-    short Left;
-    short Right;
-
-    static const ItemBounds Empty;
+    uint8_t Width;
+    uint8_t Height;
+    uint8_t Top;
+    uint8_t Bottom;
+    uint8_t Left;
+    uint8_t Right;
 };
 
 class MenuRenderer
 {
     public:
         MenuRenderer();
-        virtual void Init(vector<MenuItem>* menuItems, uint8_t* selectedIndex);
-        virtual void GetItemBounds(uint8_t index);
+        virtual void Init(vector<MenuItem>* menuItems, uint8_t* selectedIndex) = 0;
         virtual ~MenuRenderer(){};
-        virtual void Render();
+        virtual void Render() = 0;
     protected:
-        virtual ItemBounds RenderItem(uint8_t index);
+        virtual ItemBounds RenderItem(uint8_t index) = 0;
         vector<MenuItem>* _menuItems;
         uint8_t* _selectedIndex;
 };
@@ -64,7 +61,7 @@ class Menu
         Menu();
         /// @brief class to use to render the menu to a display
         /// @param renderer Must inherit from MenuRenderer
-        void UseRenderer(MenuRenderer renderer);
+        void UseRenderer(MenuRenderer* renderer);
 
         /// @brief Draws the menu or selected user screen to the display
         void Render();
@@ -73,7 +70,7 @@ class Menu
         /// @param text Text to display
         /// @param displayFunction Function that will be called when this item is selected and 'Enter'ed
         /// @return Number of menu items
-        size_t Add(char* text, DisplayFn displayFunction);
+        size_t Add(String text, DisplayFn displayFunction);
 
         /// @brief Move to the next menu item
         void Next();
@@ -87,7 +84,7 @@ class Menu
 
         /// @brief Gets the text of the selected menu item
         /// @return Text of the selected menu item
-        char* SelectedText();
+        String SelectedText();
 
         /// @brief Display the selected menu screen
         void Enter();
@@ -102,7 +99,7 @@ class Menu
     private:
         uint8_t _selected;
         vector<MenuItem> _items;
-        MenuRenderer _renderer;
+        MenuRenderer* _renderer;
 };
 
 #endif

@@ -11,6 +11,7 @@ class ST7735_Renderer : public MenuRenderer
         ST7735_Renderer(Adafruit_ST7735* display);
         void Init(vector<MenuItem>* menuItems, uint8_t* selectedIndex);
         void Render();
+        ~ST7735_Renderer(){};
     private:
         Adafruit_ST7735* _display;
         uint8_t _pageCount;

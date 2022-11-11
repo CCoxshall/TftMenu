@@ -61,14 +61,10 @@ void ST7735_Renderer::RenderScrollBar()
 
 ItemBounds ST7735_Renderer::RenderItem(uint8_t index)
 {
-    if(abs(index / 6) != _currentPage)
-    {
-        return ItemBounds::Empty;
-    }
-
     uint8_t itemWidth = _scrollBar ? 150 : 160;
+    uint8_t itemTop = 16 * (index - (_currentPage * ITEMS_PER_PAGE));
 
-    ItemBounds bounds = { itemWidth, 16, 0, 16 * (index - (_currentPage * ITEMS_PER_PAGE)) };
+    ItemBounds bounds = { itemWidth, 16, 0, itemTop };
 
     MenuItem item = _menuItems->at(index);
 
@@ -100,4 +96,6 @@ ItemBounds ST7735_Renderer::RenderItem(uint8_t index)
     _display->setCursor(x, bounds.Top + y);
     _display->setTextColor(item.IsSelected ? ST7735_BLACK : ST7735_WHITE);
     _display->write(itemText.c_str());
+
+    return bounds;
 };
