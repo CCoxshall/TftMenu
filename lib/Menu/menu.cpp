@@ -59,7 +59,6 @@ void Menu::Enter()
 
 void Menu::Exit()
 {
-    //_renderer.RenderPage();
     IsEntered = false;
 }
 
