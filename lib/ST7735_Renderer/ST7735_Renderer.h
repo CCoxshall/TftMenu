@@ -7,17 +7,19 @@
 
 class ST7735_Renderer : public MenuRenderer
 {
-    friend class Menu;
-
     public:
         ST7735_Renderer(Adafruit_ST7735* display);
+        void Init(vector<MenuItem>* menuItems, uint8_t* selectedIndex);
+        void Render();
     private:
         Adafruit_ST7735* _display;
-        unsigned char _pageCount;
-        unsigned char _currentPage;
+        uint8_t _pageCount;
+        uint8_t _currentPage;
+        bool _scrollBar;
+        void ResetDisplay();
+        void RenderScrollBar();
     protected:
-        void Init(vector<MenuItem>* menuItems);
-        ItemBounds RenderItem(unsigned char index);
+        ItemBounds RenderItem(uint8_t index);
 };
 
 #endif

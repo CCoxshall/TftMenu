@@ -8,6 +8,7 @@ Menu::Menu(){
 void Menu::UseRenderer(MenuRenderer renderer)
 {
     _renderer = renderer;
+    _renderer.Init(&_items, &_selected);
 }
 
 size_t Menu::Add(char* text, DisplayFn displayFunction)
@@ -40,7 +41,7 @@ void Menu::Previous()
     _items.at(_selected).IsSelected = true;
 }
 
-int Menu::Selected()
+uint8_t Menu::Selected()
 {
     return _selected;
 }
@@ -60,4 +61,9 @@ void Menu::Exit()
 {
     //_renderer.RenderPage();
     IsEntered = false;
+}
+
+void Menu::Render()
+{
+    _renderer.Render();
 }

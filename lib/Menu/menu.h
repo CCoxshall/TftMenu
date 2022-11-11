@@ -48,12 +48,14 @@ class MenuRenderer
 {
     public:
         MenuRenderer();
-        virtual void GetItemBounds(unsigned char index);
+        virtual void Init(vector<MenuItem>* menuItems, uint8_t* selectedIndex);
+        virtual void GetItemBounds(uint8_t index);
         virtual ~MenuRenderer(){};
+        virtual void Render();
     protected:
-        virtual void Init(vector<MenuItem>* menuItems);
-        virtual ItemBounds RenderItem(unsigned char index);
+        virtual ItemBounds RenderItem(uint8_t index);
         vector<MenuItem>* _menuItems;
+        uint8_t* _selectedIndex;
 };
 
 class Menu 
@@ -81,7 +83,7 @@ class Menu
 
         /// @brief Gets the index of the selected menu item
         /// @return Index of the selected menu item
-        int Selected();
+        uint8_t Selected();
 
         /// @brief Gets the text of the selected menu item
         /// @return Text of the selected menu item
@@ -98,7 +100,7 @@ class Menu
         bool IsEntered = false;
 
     private:
-        int _selected;
+        uint8_t _selected;
         vector<MenuItem> _items;
         MenuRenderer _renderer;
 };
