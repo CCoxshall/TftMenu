@@ -44,10 +44,12 @@ void Menu::Previous()
     }
 
     _items.at(_selected).IsSelected = false;
-    _selected--;
-    if(_selected < 0){
-        _selected = (_items.size() - 1);
+
+    if(_selected == 0){
+        _selected = _items.size();
     }
+    _selected--;
+    
     _items.at(_selected).IsSelected = true;
     _isDirty = true;
 }

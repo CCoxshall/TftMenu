@@ -28,18 +28,24 @@ void ST7735_Renderer::ResetDisplay()
 
 void ST7735_Renderer::Render()
 {
+    if(trunc(*_selectedIndex / ITEMS_PER_PAGE) != _currentPage){
+        uint8_t prevPage = _currentPage;
+        _currentPage = ceil(*_selectedIndex / ITEMS_PER_PAGE);
+        if(prevPage != _currentPage){
+            _display->fillScreen(ST7735_BLACK);
+        }
+    }
+
     _pageCount = trunc(_menuItems->size() / ITEMS_PER_PAGE);
     if(_pageCount > 0){
         _scrollBar = true;
         RenderScrollBar();
     }
 
-    if(trunc(*_selectedIndex / ITEMS_PER_PAGE) != _currentPage){
-        _currentPage = ceil(*_selectedIndex / ITEMS_PER_PAGE);
-    }
+    size_t itemCount = _menuItems->size();
 
-    for(uint8_t i = 0; i < ITEMS_PER_PAGE; i++){
-        RenderItem(i * (_currentPage + 1));
+    for(uint8_t i = 0; i < min((unsigned int)ITEMS_PER_PAGE, itemCount - (_currentPage * ITEMS_PER_PAGE)); i++){
+        RenderItem(i + (_currentPage * ITEMS_PER_PAGE));
     }
 };
 
@@ -72,13 +78,21 @@ ItemBounds ST7735_Renderer::GetSelectedItemBounds()
 ItemBounds ST7735_Renderer::GetItemBounds(uint8_t index)
 {
     uint8_t itemWidth = _scrollBar ? 118 : 128;
-    uint8_t itemTop = (index * 16) - (160 * _currentPage);
+    uint8_t itemTop = (uint8_t)((index * 16) - (160 * _currentPage));
 
     return { itemWidth, 16, 0, itemTop };
 }
 
 ItemBounds ST7735_Renderer::RenderItem(uint8_t index)
 {
+    Serial.write("Rendering item ");
+    Serial.write(String(index).c_str());
+    Serial.write("\r\n");
+    
+    if(index >= _menuItems->size()){
+        Serial.write("Cancelled.");
+        return {0,0,0,0};
+    }
     ItemBounds bounds = GetItemBounds(index);
     MenuItem item = _menuItems->at(index);
 

@@ -16,7 +16,6 @@ ST7735_Renderer DisplayRenderer = {&Tft};
 /// @brief Method to draw data to the screen for the first menu item
 void displayFirstScreen()
 {
-  Tft.setTextSize(2);
   Tft.setCursor(0, 0);
   Tft.write("First Screen!");
   Tft.setCursor(0, 20);
@@ -26,7 +25,6 @@ void displayFirstScreen()
 /// @brief Method to draw data to the screen for the second menu item
 void displaySecondScreen()
 {
-  Tft.setTextSize(2);
   Tft.setCursor(0, 0);
   Tft.write("Second Screen!");
   Tft.setCursor(0, 20);
@@ -36,7 +34,6 @@ void displaySecondScreen()
 /// @brief Method to draw data to the screen for the third menu item
 void displayThirdScreen()
 {
-  Tft.setTextSize(2);
   Tft.setCursor(0, 0);
   Tft.write("Third Screen!");
   Tft.setCursor(0, 20);
