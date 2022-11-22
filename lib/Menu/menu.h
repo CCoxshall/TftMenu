@@ -49,6 +49,8 @@ class MenuRenderer
         virtual void Init(vector<MenuItem>* menuItems, uint8_t* selectedIndex) = 0;
         virtual ~MenuRenderer(){};
         virtual void Render() = 0;
+        virtual void ClearScreen() = 0;
+        virtual ItemBounds GetSelectedItemBounds() = 0;
     protected:
         virtual ItemBounds RenderItem(uint8_t index) = 0;
         vector<MenuItem>* _menuItems;
@@ -96,10 +98,13 @@ class Menu
         /// displaying a user-defined screen
         bool IsEntered = false;
 
+        void SelectedTopLeft(uint8_t* x, uint8_t* y);
+
     private:
         uint8_t _selected;
         vector<MenuItem> _items;
         MenuRenderer* _renderer;
+        bool _isDirty;
 };
 
 #endif
