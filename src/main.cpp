@@ -8,10 +8,19 @@
 #define TFT_RST    2
 #define TFT_DC     0
 
+#define RE_SW      4
+#define RE_DT      5
+#define RE_CLK     16
+
 Adafruit_ST7735 Tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 Menu AppMenu;
-// SSD1306_Renderer DisplayRenderer = {&Oled};
 ST7735_Renderer DisplayRenderer = {&Tft};
+
+// rotary encoder
+int counter = 0; 
+int currentStateCLK;
+int lastStateCLK;
+unsigned long lastButtonPress = 0;
 
 /// @brief Method to draw data to the screen for the first menu item
 void displayFirstScreen()
@@ -46,10 +55,12 @@ void setup() {
 
   Wire.begin();
 
-  // Oled.begin(SSD1306_SWITCHCAPVCC, 0x3C, true, false);
-  // Oled.clearDisplay();
-  // Oled.setTextColor(WHITE);
-  // Oled.setTextSize(1);
+  pinMode(RE_CLK, INPUT);
+  pinMode(RE_DT, INPUT);
+  pinMode(RE_SW, INPUT_PULLUP);
+
+	// Read the initial state of the rotary encoder
+	lastStateCLK = digitalRead(RE_CLK);
 
   Tft.initR(INITR_BLACKTAB);
   Tft.fillScreen(ST7735_BLACK);
@@ -71,41 +82,34 @@ void setup() {
 }
 
 void loop() {
-  
-  char command = Serial.read();
-  
-  uint8_t x, y;
 
-  switch (command)
-  {
-    case 'n':
-      // move to the next menu item
+	currentStateCLK = digitalRead(RE_CLK);
+
+	if ((currentStateCLK != lastStateCLK) && currentStateCLK == 1){
+		if (digitalRead(RE_DT) != currentStateCLK) {
       AppMenu.Next();
-      Serial.println(AppMenu.SelectedText());
-      AppMenu.SelectedTopLeft(&x, &y);
-      Serial.println("X: " + String(x) + " Y: " + String(y));
-      break;
-    case 'p':
-      // move to the previous menu item
+		} else {
       AppMenu.Previous();
-      Serial.println(AppMenu.SelectedText());
-      Serial.println("X: " + String(x) + " Y: " + String(y));
-      break;
-    case 'e':
-      if(AppMenu.IsEntered){
-        // return to the menu from the user screen
+		}
+	}
+
+  lastStateCLK = currentStateCLK;
+
+	int btnState = digitalRead(RE_SW);
+
+	if (btnState == LOW) {
+		if (millis() - lastButtonPress > 100) {
+			if(AppMenu.IsEntered){
         AppMenu.Exit();
-        Serial.println("Exited");
       }
       else {
-          // display the user screen associated with the selected menu item
         AppMenu.Enter();
-        Serial.println("Entered");
       }
-      break;
-    default:
-      break;
-  }
+		}
+
+		lastButtonPress = millis();
+	}
 
   AppMenu.Render();
+  delay(1);
 }
