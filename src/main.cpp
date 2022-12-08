@@ -20,7 +20,7 @@ ST7735_Renderer DisplayRenderer = {&Tft};
 int counter = 0; 
 int currentStateCLK;
 int lastStateCLK;
-unsigned long lastButtonPress = 0;
+unsigned long lastButtonPress = 0; //wooo!
 
 /// @brief Method to draw data to the screen for the first menu item
 void displayFirstScreen()
