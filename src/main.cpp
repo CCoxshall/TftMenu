@@ -21,14 +21,18 @@ int counter = 0;
 int currentStateCLK;
 int lastStateCLK;
 unsigned long lastButtonPress = 0; //wooo!
-
+long lastScreen1RenderTime = 0;
 /// @brief Method to draw data to the screen for the first menu item
 void displayFirstScreen()
 {
-  Tft.setCursor(0, 0);
-  Tft.write("First Screen!");
-  Tft.setCursor(0, 20);
-  Tft.write("All ur stuff goes here!");
+  if(millis() - lastScreen1RenderTime < 2000){
+    Tft.fillScreen(ST7735_BLACK);
+    Tft.setCursor(0, 0);
+    Tft.write("First Screen!");
+    Tft.setCursor(0, 20);
+    Tft.write("All ur stuff goes here!");
+    lastScreen1RenderTime = millis();
+  }
 }
 
 /// @brief Method to draw data to the screen for the second menu item
